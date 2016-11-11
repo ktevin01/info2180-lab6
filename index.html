@@ -8,7 +8,7 @@
     <body>
         <form>
           Word:<br>
-          <input type="text" name="q" value="">
+          <input type="text" name="q" id="input" value="">
           <br><br>
           <button type="button" onclick="code()">Search</button>
         </form>
@@ -17,16 +17,12 @@
         <script>
             var word;
             var div = document.createElement("div");
-            div.setAttribute("id","result");
             document.body.appendChild(div);
+            
             function code(){
-                //var definition;
-                //alert(0);
-                //definition = <?php echo json_encode($definition, JSON_PRETTY_PRINT); ?>;
-                //alert (definition.definition);
-                var url = "request.php?q=bar";
+                word=document.getElementById("input").value;
+                var url = "request.php?q=".concat(word);
                 var request= new XMLHttpRequest();
-                
                 
                 function helper(link){
                     request.onreadystatechange=alertStuff;
@@ -36,7 +32,8 @@
                 function alertStuff(){
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
-                            alert(request.responseText);
+                            //alert(request.responseText);
+                            div.innerHTML=request.responseText;
                         } else {
                                 alert('There was a problem with the request.');
                          } 
