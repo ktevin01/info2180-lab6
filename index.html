@@ -11,6 +11,8 @@
           <input type="text" name="q" id="input" value="">
           <br><br>
           <button type="button" onclick="code()">Search</button>
+          &nbsp
+          <button type="button" onclick="every()">Get All Definitions</button>
         </form>
         
         <script src="jquery-3.1.1.min.js"></script>
@@ -32,7 +34,7 @@
                 function alertStuff(){
                     if (request.readyState === XMLHttpRequest.DONE) {
                         if (request.status === 200) {
-                            //alert(request.responseText);
+                            //alert(request);
                             div.innerHTML=request.responseText;
                         } else {
                                 alert('There was a problem with the request.');
@@ -40,7 +42,38 @@
                     }
                 }
                 helper(url);
-
+            }
+            
+            function every(){
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = allRequest;
+                xhttp.open('GET',"request.php",true);
+                xhttp.send();
+                
+                function allRequest(){
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        //
+                        var xmlDoc = xhttp.responseText;
+                        //console.log(xhttp);
+                        //
+                        var table="<tr><th>Name</th><th>Author</th><th>Definition</th></tr>";
+                        var x = xmlDoc.getElementsByTagName("entry");
+                        for(var i = 0 ;i<x.length;i++){
+                            table += "<tr><td>" +
+                            x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue +
+                            "</td><td>" +
+                            x[i].getElementsByTagName("author")[0].childNodes[0].nodeValue +
+                            "</td><td>"+
+                            x[i].getElementsByTagName("definition")[0].childNodes[0].nodeValue +
+                            "</td></tr>";
+                            
+                        }
+                        div.innerHTML=table;
+                    }
+                    
+                };
+                
+                allRequest();
             }
             
         </script>
